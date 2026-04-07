@@ -1,0 +1,65 @@
+import java.util.*;
+class Book {
+    private String title;
+    private int year;
+    public Book(String title, int year) {
+        this.title = title;
+        this.year = year;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public int getYear() {
+        return year;
+    }
+}
+public class Library {
+    private List<Book> books = new ArrayList<>();
+    public void addBook(String title, int year) {
+        books.add(new Book(title, year));
+    }
+    class BookShelf implements Iterable<Book> {
+        private int minYear;
+        public BookShelf(int minYear) {
+            this.minYear = minYear;
+        }
+        @Override
+        public Iterator<Book> iterator() {
+            return new Iterator<Book>() {
+                private int index = 0;
+                {
+                    while (index < books.size() && books.get(index).getYear() < minYear) {
+                        index++;
+                    }
+                }
+                @Override
+                public boolean hasNext() {
+                    return index < books.size();
+                }
+                @Override
+                public Book next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    Book current = books.get(index);
+                    index++;
+                    // Skip any books that don't meet the minYear requirement
+                    while (index < books.size() && books.get(index).getYear() < minYear) {
+                        index++;
+                    }
+                    return current;
+                }
+            };
+        }
+    }
+  public static void main(String[] args) {
+    Library lib = new Library();
+    lib.addBook("Сүүн зам", 2020);
+    lib.addBook("Хуучин ном", 1999);
+    
+    Library.BookShelf recent = lib.getRecentBooks(2000);
+    
+    for (Book b : recent) {
+        System.out.println(b.getTitle() + ": " + b.getYear());
+    }
+}
