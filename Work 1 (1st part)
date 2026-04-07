@@ -1,0 +1,46 @@
+import java.util.ArrayList;
+import java.util.List;
+
+abstract class Animal {
+    protected String name;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+class Mammal extends Animal {
+    public Mammal(String name) {
+        super(name);
+    }
+}
+
+class Bird extends Animal {
+    public Bird(String name) {
+        super(name);
+    }
+}
+
+public class Zoo<T extends Animal> {
+    private List<T> animals = new ArrayList<>();
+
+    public void addAnimal(T animal) {
+        animals.add(animal);
+    }
+
+    // transferAnimals method implementation
+    public void transferAnimals(List<? extends T> source, List<? super T> destination) {
+        // Add all animals from source to destination
+        destination.addAll(source);
+        // Optionally clear source if you want to "move" instead of "copy"
+        // source.clear();
+    }
+
+    public List<T> getAnimals() {
+        return animals;
+    }
+}
